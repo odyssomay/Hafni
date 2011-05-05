@@ -12,23 +12,26 @@ To the left is the java class, to the right is the function used to create that 
  JComboBox 	combo-box
 
 =head3 Hafni.swing.action
-AbstractAction	action
-JButton		button
-JToggleButton	toggle-button
-JRadioButton	radio-button
-JCheckBox	check-box
-JMenuItem	menu-item
-JCheckBoxMenuItem	check-box-menu-item
-JRadioButtonMenuItem	radio-button-menu-item
-ButtonGroup	button-group
+
+ AbstractAction	action
+ JButton	button
+ JToggleButton	toggle-button
+ JRadioButton	radio-button
+ JCheckBox	check-box
+ JMenuItem	menu-item
+ JCheckBoxMenuItem	check-box-menu-item
+ JRadioButtonMenuItem	radio-button-menu-item
+ ButtonGroup	button-group
 
 =head3 Hafni.swing.layout
-BorderLayout	border-layout
-BoxLayout	box-layout
-CardLayout	card-layout
-FlowLayout	flow-layout
+
+ BorderLayout	border-layout
+ BoxLayout	box-layout
+ CardLayout	card-layout
+ FlowLayout	flow-layout
 
 =head3 Hafni.swing.menu
-JMenu		menu
-JMenuBar	menu-bar
-JToolBar	tool-bar
+
+ JMenu		menu
+ JMenuBar	menu-bar
+ JToolBar	tool-bar
