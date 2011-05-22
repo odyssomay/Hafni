@@ -4,7 +4,7 @@ Hafni is a java swing wrapper for the clojure language focusing on how component
 
 =head2 Usage
 
-See [Wiki/usage](https://github.com/odyssomay/Hafni/wiki/Usage)
+See L<Wiki/usage|https://github.com/odyssomay/Hafni/wiki/Usage>
 
 =head2 Installation
 
