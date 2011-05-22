@@ -1,37 +1,67 @@
 =head1 Hafni
 
-=head2 Implemented classes
+Hafni is a java swing to clojure wrapper. 
 
-To the left is the java class, to the right is the function used to create that class.
+=head2 Usage
 
-=head3 Hafni.swing.view
+=head2 Installation
 
- JFrame		frame
- JIcon		icon
- JLabel 	label
- JComboBox 	combo-box
+=head2 Reference
+
+To the left is the java class or "functionality", to the right is the function used.
 
 =head3 Hafni.swing.action
 
- AbstractAction	action
- JButton	button
- JToggleButton	toggle-button
- JRadioButton	radio-button
- JCheckBox	check-box
- JMenuItem	menu-item
+ AbstractAction		action
+ ButtonGroup		button-group
+ JButton		button
+ JCheckBox		check-box
  JCheckBoxMenuItem	check-box-menu-item
+ JMenuItem		menu-item
+ JRadioButton		radio-button
  JRadioButtonMenuItem	radio-button-menu-item
- ButtonGroup	button-group
+ JToggleButton		toggle-button
+
+=head3 Hafni.swing.container
+
+ JComboBox 		combo-box
+ JSpinner		spinner
+
+=head3 Hafni.swing.dialog
+
+ JOptionPane/showMessageDialog
+			message
+			info-message
+			warning-message
+			error-message
+			plain-message
+ JOptionPane/showInputDialog
+			text-input-dialog
+			adv-input-dialog
 
 =head3 Hafni.swing.layout
 
- BorderLayout	border-layout
- BoxLayout	box-layout
- CardLayout	card-layout
- FlowLayout	flow-layout
+ BorderLayout		border-layout
+ BoxLayout		box-layout
+ CardLayout		card-layout
+ FlowLayout		flow-layout
 
 =head3 Hafni.swing.menu
 
- JMenu		menu
- JMenuBar	menu-bar
- JToolBar	tool-bar
+ JMenu			menu
+ JMenuBar		menu-bar
+ JToolBar		tool-bar
+
+=head3 Hafni.swing.text
+
+ JPasswordField		password-field
+ JTextArea		text-area
+ JTextField		text-field
+ JTextPane		text-pane
+
+=head3 Hafni.swing.view
+
+ JFrame			frame
+ JIcon			icon
+ JLabel 		label
+
