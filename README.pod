@@ -1,10 +1,14 @@
 =head1 Hafni
 
-Hafni is a java swing to clojure wrapper. 
+Hafni is a java swing wrapper for the clojure language focusing on how components change.
 
 =head2 Usage
 
+See [Wiki/usage](https://github.com/odyssomay/Hafni/wiki/Usage)
+
 =head2 Installation
+
+Not currently possible - download the source.
 
 =head2 Reference
 
