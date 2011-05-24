@@ -3,15 +3,16 @@
         (Hafni event utils)
         (Hafni.swing component))
   (:import java.awt.event.ActionListener 
+           (java.awt Color Font)
            (javax.swing JPasswordField JTextArea JTextField JTextPane)
            (javax.swing.event DocumentListener)
-           (javax.swing.text DefaultStyledDocument PlainDocument StyleContext)))
+           (javax.swing.text DefaultStyledDocument PlainDocument StyleConstants StyleContext)))
 
 (defn text-field 
   "Create a JTextField
 Fields:
   :editable - If the field should be editable | Bool
-  :width - set the width of the field | int
+  :width - set the width of the field | Int
 Options:
   :text - the text of the field | String
 Events:
@@ -36,6 +37,7 @@ Events:
   "Create a JPasswordField
 Fields:
   :echo_char - The character to be display on input | Char
+  :width - set the width of the field | Int
 Events:
   :act - fires when the user is finished typing,
          data sent is what the user typed | String"
@@ -61,6 +63,7 @@ Fields:
   :editable - set if it is allowed to change the area | Bool
   :tab_size - number of spaces for each tab | Int
   :append - append text to the end of the area | String
+  :font - font of all the text | [Component]
 Options:
   :text - the text of the area | String
 Events:
@@ -105,7 +108,8 @@ Events:
                              (proxy-super remove offset length))))
         arrs {:editable #(.setEditable ta %)
               :tab_size #(.setTabSize ta %)
-              :append #(.append ta %)}]
+              :append #(.append ta %)
+              :font #(.setFont ta %)}]
     (.setDocument ta document)
     (.addDocumentListener (.getDocument ta) listener)
     (if (contains? opts :text) (.setText ta (:text opts)))
@@ -113,8 +117,6 @@ Events:
                         :removed ev_removed
                         :insert ev_insert
                         :remove ev_remove} opts)))
-
-(defn style [] )
 
 (defn- set-attribute [doc style pos]
   "Set attribute with position specified in pos to doc."
@@ -125,8 +127,13 @@ Events:
 Fields:
   :style - set the style of a part of the text, arguments are
            the style (must be present in :styles), the offset
-           and the length of the change | [Key Int Int]
-  :styles - add styles to be available (see (doc style)) | [Key Component]"
+           and the length of the change | [String Int Int]
+  :styles - add styles to be available, :name must be provided, and is
+            used as an identifier to :style. Also see:
+               Hafni.swing.utils/color 
+               Hafni.swing.utils/font
+                  | [{:name String :font Component :color java.awt.Color :size Int :background java.awt.Color
+                      :bold Bool :italic Bool :underline Bool}]"
   [& options]
   (let [opts (parse-options options)
         ev_inserted (evt)
@@ -151,15 +158,28 @@ Fields:
                            (if-let [remv (ev_remove [offset length])]
                              (proxy-super remove (first remv) (second remv))
                              (proxy-super remove offset length))))
-        ta (JTextPane. document)
-        arrs {:editable #(.setEditable ta %)
-              :tab_size #(.setTabSize ta %)
-              :append #(.append ta %)
+        tp (JTextPane. document)
+        arrs {:editable #(.setEditable tp %)
+              :tab_size #(.setTabSize tp %)
+              :append #(.append tp %)
+              :font #(.setFont tp %)
               :style #(set-attribute document (.getStyle document (first %)) (rest %))
-              :styles #()}]
-    (.addDocumentListener (.getDocument ta) listener)
-    (if (contains? opts :text) (.setText ta (:text opts)))
-    (init-comp ta arrs {:inserted ev_inserted
+              :styles (fn [coll] 
+                        (dorun (map #(let [style (.addStyle sc (:name %) nil)]
+                                       (dorun (map (fn [x]
+                                                     (println "we got: " x)
+                                                     (condp = (first x)
+                                                       :font (.addAttribute style StyleConstants/FontFamily (second x))
+                                                       :size (.addAttribute style StyleConstants/FontSize (second x))
+                                                       :color (.addAttribute style StyleConstants/Foreground (second x))
+                                                       :background (.addAttribute style StyleConstants/Background (second x))
+                                                       :bold (.addAttribute style StyleConstants/Bold (second x))
+                                                       :italic (.addAttribute style StyleConstants/Italic (second x))
+                                                       :underline (.addAttribute style StyleConstants/Underline (second x))
+                                                       nil)) %))) coll)))}]
+    (if (contains? opts :text) (.setText tp (:text opts)))
+    (.addDocumentListener (.getDocument tp) listener)
+    (init-comp tp arrs {:inserted ev_inserted
                         :removed ev_removed
                         :insert ev_insert
                         :remove ev_remove} opts)))

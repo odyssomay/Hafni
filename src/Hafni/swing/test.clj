@@ -95,12 +95,16 @@
                                                 :removed (arr #(println "removed: \"" % "\""))))
          :dont_exit_on_close :size 300 300))
 
+(import 'java.awt.Color)
+
 (defn text-pane-test []
-  (frame :content (scroll-pane (comp-and-events (text-pane :text "YEAH")
-                                                :insert (arr (fn [[x y]] [x (str y ".")]))
-                                                :inserted (arr #(println "inserted: \"" % "\""))
-                                                :removed (arr #(println "removed: \"" % "\""))))
-         :dont_exit_on_close :size 300 300))
+  (let [sp (comp-and-events (text-pane :text "YEAH" :styles [{:name "1" :color Color/blue :size 20 :bold true :italic true :underline true}])
+                                       :insert (arr (fn [[x y]] [x (str y ".")]))
+                                       :inserted (arr #(println "inserted: \"" % "\""))
+                                       :removed (arr #(println "removed: \"" % "\"")))]
+    ((input-arr sp :style) ["1" 0 3])
+    (frame :content (scroll-pane sp)
+           :dont_exit_on_close :size 300 300)))
 
 (defn progress-bar-test []
   (let [pb (progress-bar :min 0 :max 20 :value 0 :indeterminate true)
