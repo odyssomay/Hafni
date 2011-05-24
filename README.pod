@@ -1,6 +1,43 @@
 =head1 Hafni
 
 Hafni is a java swing wrapper for the clojure language focusing on how components change.
+This means in practice that things that normally wouldn't be changed, or the change is 
+impossible in a convenient way, now is easily changeable and hopefully in a more functional way.
+
+=head2 Example
+
+Consider the following example (from Hafni.swing.test/button-test2):
+
+ (frame :content (comp-and-events (button :name "*")
+                                  :act (flow (output-arr this :name) >>>
+                                             (arr #(str % "*")) >>> (input-arr this :name)))
+        :size 200 200 :dont_exit_on_close)
+
+This creates a frame (a window if you so will), with a button as content, size 200x200 and which doesn't close when the frame is closed (useful when working in the repl).
+It is likely that the code
+
+ (comp-and-events (button :name "*")
+                  :act (flow (output-arr this :name) >>>
+                             (arr #(str % "*")) >>> (input-arr this :name)))
+
+will look very wierd if you haven't read the wiki. That is OK, we will now in a simple (and incomplete) way walk through this code.
+We first create a button with the text "*".
+ 
+ (button :name "*")
+
+Then, when the button is pressed, another "*" will be added to the text of the button, and set as the current text of the button. 
+ 
+ (flow (output-arr this :name) >>>
+       (arr #(str % "*")) >>> (input-arr this :name)))
+
+Thus, the text of the button changes in the following way:
+
+ "*"
+ "**"
+ "***"
+ "****"
+
+To accomplish this, Hafni uses the datatypes I<Event> and I<Arrow> which are both explained in the wiki.
 
 =head2 Usage
 

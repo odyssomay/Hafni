@@ -8,9 +8,9 @@
     (frame :content (panel [b]) :size 200 80 :title "Hello World!" :dont_exit_on_close)))
 
 (defn button-test2 []
-  (frame :content (panel [(comp-and-events (button :name "*")
-                                            :act (flow (output-arr this :name) >>> 
-                                                       (arr #(str % "*")) >>> (input-arr this :name)))])
+  (frame :content (comp-and-events (button :name "*")
+                                   :act (flow (output-arr this :name) >>> 
+                                              (arr #(str % "*")) >>> (input-arr this :name)))
          :size 200 200 :dont_exit_on_close))
 
 (defn radio-test []
