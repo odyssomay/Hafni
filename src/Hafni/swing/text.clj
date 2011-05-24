@@ -1,5 +1,5 @@
 (ns Hafni.swing.text
-  (:use clojure.contrib.logging
+  (:use clojure.tools.logging
         (Hafni event utils)
         (Hafni.swing component))
   (:import java.awt.event.ActionListener 

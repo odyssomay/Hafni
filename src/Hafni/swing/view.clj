@@ -1,6 +1,6 @@
 (ns Hafni.swing.view
   (:use clj-diff.core
-        clojure.contrib.logging
+        clojure.tools.logging
         (Hafni event utils arrow)
         (Hafni.swing component))
   (:import (java.awt.event ActionListener)

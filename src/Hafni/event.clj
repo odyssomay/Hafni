@@ -1,5 +1,5 @@
 (ns Hafni.event
-  (:use clojure.contrib.logging))
+  (:use clojure.tools.logging))
 
 (defprotocol event_p 
   (connect [this arrow] "Connect this event to arrow.")
