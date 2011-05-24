@@ -57,6 +57,28 @@ Events:
 
 (defn formatted-text-field [& options] )
 
+(defn- event-to-string [e]
+  (.getText (.getDocument e) (.getOffset e) (.getLength e)))
+
+(defn- document-listener [ev_inserted ev_removed]
+  (reify DocumentListener
+    (changedUpdate [_ e]) 
+    (insertUpdate [_ e]
+                  (ev_inserted [(.getOffset e) (event-to-string e)]))
+    (removeUpdate [_ e]
+                  (ev_removed [(.getOffset e) (.getLength e)]))))
+
+(defn- init-document [document_class ev_insert ev_remove]
+  (proxy [document_class] []
+         (insertString [offset text a]
+                       (if-let [ins (ev_insert [offset text])]
+                               (proxy-super insertString (first ins) (second ins) a)
+                               (proxy-super insertString offset text a)))
+         (remove [offset length]
+                 (if-let [remv (ev_remove [offset length])]
+                         (proxy-super remove (first remv) (second remv))
+                         (proxy-super remove offset length)))))
+
 (defn text-area 
   "Creates a JTextArea
 Fields:
@@ -89,23 +111,8 @@ Events:
         ev_removed (evt)
         ev_insert (evt)
         ev_remove (evt)
-        e_to_str (fn [e] 
-                   (.getText (.getDocument e) (.getOffset e) (.getLength e)))
-        listener (reify DocumentListener
-                   (changedUpdate [_ e]) 
-                   (insertUpdate [_ e]
-                                 (ev_inserted [(.getOffset e) (e_to_str e)]))
-                   (removeUpdate [_ e]
-                                 (ev_removed [(.getOffset e) (.getLength e)])))
-        document (proxy [PlainDocument] []
-                   (insertString [offset text a]
-                                 (if-let [ins (ev_insert [offset text])]
-                                   (proxy-super insertString (first ins) (second ins) a)
-                                   (proxy-super insertString offset text a)))
-                   (remove [offset length]
-                           (if-let [remv (ev_remove [offset length])]
-                             (proxy-super remove (first remv) (second remv))
-                             (proxy-super remove offset length))))
+        listener (document-listener ev_inserted ev_removed) 
+        document (init-document PlainDocument ev_insert ev_remove) 
         arrs {:editable #(.setEditable ta %)
               :tab_size #(.setTabSize ta %)
               :append #(.append ta %)
@@ -123,7 +130,8 @@ Events:
   (.setCharacterAttributes doc (first pos) (second pos) style true))
 
 (defn text-pane
-  "Similar to text-area
+  "Creates a JTextPane.
+Supports everything that text-area supports.
 Fields:
   :style - set the style of a part of the text, arguments are
            the style (must be present in :styles), the offset
@@ -140,24 +148,9 @@ Fields:
         ev_removed (evt)
         ev_insert (evt)
         ev_remove (evt)
-        e_to_str (fn [e] 
-                   (.getText (.getDocument e) (.getOffset e) (.getLength e)))
-        listener (reify DocumentListener
-                   (changedUpdate [_ e]) 
-                   (insertUpdate [_ e]
-                                 (ev_inserted [(.getOffset e) (e_to_str e)]))
-                   (removeUpdate [_ e]
-                                 (ev_removed [(.getOffset e) (.getLength e)])))
+        listener (document-listener ev_inserted ev_removed)
         sc (StyleContext.)
-        document (proxy [DefaultStyledDocument] [sc]
-                   (insertString [offset text a]
-                                 (if-let [ins (ev_insert [offset text])]
-                                   (proxy-super insertString (first ins) (second ins) a)
-                                   (proxy-super insertString offset text a)))
-                   (remove [offset length]
-                           (if-let [remv (ev_remove [offset length])]
-                             (proxy-super remove (first remv) (second remv))
-                             (proxy-super remove offset length))))
+        document (init-document DefaultStyledDocument ev_insert ev_remove) 
         tp (JTextPane. document)
         arrs {:editable #(.setEditable tp %)
               :tab_size #(.setTabSize tp %)
@@ -167,7 +160,6 @@ Fields:
               :styles (fn [coll] 
                         (dorun (map #(let [style (.addStyle sc (:name %) nil)]
                                        (dorun (map (fn [x]
-                                                     (println "we got: " x)
                                                      (condp = (first x)
                                                        :font (.addAttribute style StyleConstants/FontFamily (second x))
                                                        :size (.addAttribute style StyleConstants/FontSize (second x))
@@ -176,7 +168,9 @@ Fields:
                                                        :bold (.addAttribute style StyleConstants/Bold (second x))
                                                        :italic (.addAttribute style StyleConstants/Italic (second x))
                                                        :underline (.addAttribute style StyleConstants/Underline (second x))
-                                                       nil)) %))) coll)))}]
+                                                       nil)) 
+                                                   %))) 
+                                    coll)))}]
     (if (contains? opts :text) (.setText tp (:text opts)))
     (.addDocumentListener (.getDocument tp) listener)
     (init-comp tp arrs {:inserted ev_inserted
