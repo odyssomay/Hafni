@@ -1,10 +1,10 @@
 =head1 Hafni
 
 Hafni is a java swing wrapper for the clojure language focusing on how components change.
-This means in practice that things that normally wouldn't be changed, or the change is 
+This means in practice that things that normally wouldn't be changed, or is 
 impossible in a convenient way, now is easily changeable and hopefully in a more functional way.
 
-=head2 Example
+=head3 Example
 
 Consider the following example (from Hafni.swing.test/button-test2):
 
@@ -25,7 +25,7 @@ We first create a button with the text "*".
  
  (button :name "*")
 
-Then, when the button is pressed, another "*" will be added to the text of the button, and set as the current text of the button. 
+Then, when the button is pressed, the buttons text is extracted, another "*" is added to the end of that text, and set as the current text of the button. 
  
  (flow (output-arr this :name) >>>
        (arr #(str % "*")) >>> (input-arr this :name)))
