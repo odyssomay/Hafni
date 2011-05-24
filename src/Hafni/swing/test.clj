@@ -1,6 +1,6 @@
 (ns Hafni.swing.test
   (:use (Hafni arrow event utils)
-        (Hafni.swing view component action layout menu container text)))
+        (Hafni.swing view component action layout menu container text utils)))
 
 (defn button-test []
   (let [b (button :name "")]
@@ -98,7 +98,8 @@
 (import 'java.awt.Color)
 
 (defn text-pane-test []
-  (let [sp (comp-and-events (text-pane :text "YEAH" :styles [{:name "1" :color Color/blue :size 20 :bold true :italic true :underline true}])
+  (let [sp (comp-and-events (text-pane :text "YEAH" :styles [{:name "1" :color Color/blue :size 20 :bold true 
+                                                              :italic true :underline true}])
                                        :insert (arr (fn [[x y]] [x (str y ".")]))
                                        :inserted (arr #(println "inserted: \"" % "\""))
                                        :removed (arr #(println "removed: \"" % "\"")))]

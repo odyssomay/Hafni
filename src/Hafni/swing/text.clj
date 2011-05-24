@@ -68,17 +68,6 @@ Events:
     (removeUpdate [_ e]
                   (ev_removed [(.getOffset e) (.getLength e)]))))
 
-(defn- init-document [document_class ev_insert ev_remove]
-  (proxy [document_class] []
-         (insertString [offset text a]
-                       (if-let [ins (ev_insert [offset text])]
-                               (proxy-super insertString (first ins) (second ins) a)
-                               (proxy-super insertString offset text a)))
-         (remove [offset length]
-                 (if-let [remv (ev_remove [offset length])]
-                         (proxy-super remove (first remv) (second remv))
-                         (proxy-super remove offset length)))))
-
 (defn text-area 
   "Creates a JTextArea
 Fields:
@@ -112,7 +101,15 @@ Events:
         ev_insert (evt)
         ev_remove (evt)
         listener (document-listener ev_inserted ev_removed) 
-        document (init-document PlainDocument ev_insert ev_remove) 
+        document  (proxy [PlainDocument] []
+                    (insertString [offset text a]
+                                  (if-let [ins (ev_insert [offset text])]
+                                    (proxy-super insertString (first ins) (second ins) a)
+                                    (proxy-super insertString offset text a)))
+                    (remove [offset length]
+                            (if-let [remv (ev_remove [offset length])]
+                              (proxy-super remove (first remv) (second remv))
+                              (proxy-super remove offset length))))
         arrs {:editable #(.setEditable ta %)
               :tab_size #(.setTabSize ta %)
               :append #(.append ta %)
@@ -150,7 +147,15 @@ Fields:
         ev_remove (evt)
         listener (document-listener ev_inserted ev_removed)
         sc (StyleContext.)
-        document (init-document DefaultStyledDocument ev_insert ev_remove) 
+        document (proxy [DefaultStyledDocument] [sc]
+         (insertString [offset text a]
+                       (if-let [ins (ev_insert [offset text])]
+                               (proxy-super insertString (first ins) (second ins) a)
+                               (proxy-super insertString offset text a)))
+         (remove [offset length]
+                 (if-let [remv (ev_remove [offset length])]
+                         (proxy-super remove (first remv) (second remv))
+                         (proxy-super remove offset length))))
         tp (JTextPane. document)
         arrs {:editable #(.setEditable tp %)
               :tab_size #(.setTabSize tp %)
