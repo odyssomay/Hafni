@@ -1,5 +1,6 @@
-(defproject Hafni "1.0.0-SNAPSHOT"
+(defproject hafni "1.0.0-SNAPSHOT"
   :description "Hafni is a java swing wrapper for the clojure language focusing on how components change."
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/tools.logging "0.1.2"]
-                 [clj-diff "1.0.0-SNAPSHOT"]])
+                 [clj-diff "1.0.0-SNAPSHOT"]]
+  :dev-dependencies [[lein-clojars "0.6.0"]])

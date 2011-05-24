@@ -2,7 +2,7 @@
 
 Hafni is a java swing wrapper for the clojure language focusing on how components change.
 This means in practice that things that normally wouldn't be changed, or is 
-impossible in a convenient way, now is easily changeable and hopefully in a more functional way.
+impossible to change in a convenient way, now is easily changeable and hopefully in a more functional way.
 
 =head3 Example
 
@@ -49,7 +49,7 @@ See <a href="https://github.com/odyssomay/Hafni/wiki/Usage">Wiki/usage</a>
 
 =head2 Installation
 
-Not currently possible - download the source.
+Add [hafni "1.0.0-SNAPSHOT"] as a dependency in leiningen. 
 
 =head2 Reference
 
