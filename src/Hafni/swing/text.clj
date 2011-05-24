@@ -5,7 +5,7 @@
   (:import java.awt.event.ActionListener 
            (javax.swing JPasswordField JTextArea JTextField JTextPane)
            (javax.swing.event DocumentListener)
-           (javax.swing.text DefaultStyledDocument PlainDocument)))
+           (javax.swing.text DefaultStyledDocument PlainDocument StyleContext)))
 
 (defn text-field 
   "Create a JTextField

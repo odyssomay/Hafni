@@ -101,3 +101,14 @@
                                                 :inserted (arr #(println "inserted: \"" % "\""))
                                                 :removed (arr #(println "removed: \"" % "\""))))
          :dont_exit_on_close :size 300 300))
+
+(defn progress-bar-test []
+  (let [pb (progress-bar :min 0 :max 20 :value 0 :indeterminate true)
+        b (comp-and-events (button :name "inc")
+                           :act (flow (output-arr pb :value) >>> (arr #(+ % 10)) >>> (input-arr pb :value)))
+        b2 (comp-and-events (button :name "dec")
+                            :act (flow (output-arr pb :value) >>> (arr #(- % 10)) >>> (input-arr pb :value)))
+        b3 (comp-and-events (button :name "swap indeterminate state")
+                            :act (flow (output-arr pb :indeterminate) >>> (arr not) >>> (input-arr pb :indeterminate)))]
+    (frame :content (flow-layout :content pb b b2 b3 :align "center")
+           :size 300 300 :dont_exit_on_close)))

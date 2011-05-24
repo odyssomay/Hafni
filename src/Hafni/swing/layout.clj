@@ -9,15 +9,11 @@
 Fields:
   :north, :south, :west, :east, :center - content | Component
   :hgap - Horizontal gap between components | Int
-  :vgap - Vertical gap between components | Int
-Options:
-  :cont - container to be used, by default JPanel | Component"
+  :vgap - Vertical gap between components | Int"
   [& options] 
   (let [opts (parse-options options)
         layout (BorderLayout.)
-        cont (if (contains? opts :cont)
-                 (component (:cont opts))
-                 (JPanel. layout))
+        cont (JPanel. layout)
         arrs {:north #(.add cont BorderLayout/NORTH %)
               :south #(.add cont BorderLayout/SOUTH %)
               :west #(.add cont BorderLayout/WEST %)
@@ -35,9 +31,7 @@ Options:
   :valign - align components vertically, instead of the default horizontal alignment"
   [& options]
   (let [opts (parse-options options)
-        cont  (if (contains? opts :cont)
-                (component (:cont opts))
-                (JPanel.))
+        cont (JPanel.)
         layout (BoxLayout. cont (if (contains? opts :valign)
                                   BoxLayout/Y_AXIS
                                   BoxLayout/X_AXIS))
@@ -60,9 +54,7 @@ is sent as argument to the input-arr :show"
   [& options]
   (let [opts (parse-options options)
         layout (CardLayout.)
-        cont (if (contains? opts :cont)
-                 (component (:cont opts))
-                 (JPanel. layout))
+        cont (JPanel. layout)
         arrs {:content (fn [x] (dorun (map #(.add cont (component (second %)) (first %)) x)))
               :show #(.show layout cont %)
               :hgap #(.setHgap layout %)
@@ -76,8 +68,7 @@ Fields:
   :hgap - Horizontal gap between components | Int
   :vgap - Vertical gap between components | Int
   :align - set alignment of components | String : 
-      [\"center\" \"leading\" \"trailing\" \"left\" \"right\"]
-  "
+      [\"center\" \"leading\" \"trailing\" \"left\" \"right\"]"
   [& options]
   (let [opts (parse-options options)
         layout (FlowLayout.)

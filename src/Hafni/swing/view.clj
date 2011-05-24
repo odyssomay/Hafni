@@ -4,7 +4,7 @@
         (Hafni event utils arrow)
         (Hafni.swing component))
   (:import (java.awt.event ActionListener)
-           (javax.swing ImageIcon JComboBox JFrame JLabel JPanel JScrollPane)
+           (javax.swing ImageIcon JComboBox JFrame JLabel JPanel JProgressBar JScrollPane)
            (java.net URL))) 
 
 (defn frame
@@ -13,8 +13,8 @@ Fields:
   :title - title of frame | String
   :content - content of frame | Component
   :icon - path to icon for the frame (typical size is 16x16) | String 
-  :size - Size of frame | (Int, Int)
-  :location - Location of frame | (Int, Int)
+  :size - Size of frame | [Int, Int]
+  :location - Location of frame | [Int, Int]
   :menu_bar - menu bar of frame | Component
 
 Options:
@@ -35,12 +35,7 @@ Options:
          (init-comp fr arrs nil opts)))
 
 (defn panel 
-  "DONT USE - use a layout instead
-  
-  Create a java panel.
-Fields:
-  :content - content of panel | Component or [Component]
-  :layout - layout of panel | Layout"
+  "DO NOT USE - use a flow-layout instead" 
   [content & options]
   (let [opts (parse-options options)
         pan (JPanel.)]
@@ -77,6 +72,29 @@ Fields:
         arrs {:text #(.setText l %)
               :icon #(.setIcon l (component %))}]
     (init-comp l arrs nil opts)))
+
+(defn progress-bar 
+  "Create a JProgressBar.
+Fields:
+  :min - minimum value | Int
+  :max - maximum value | Int
+  :value - set the current value, will be truncated if outside :min, :max range | Int
+  :text - set the currently displayed text, if not specified, shows a percentage | String
+  :indeterminate - If true, shows a bouncing block with no information on progress | Bool"
+  [& options]
+  (let [opts (parse-options options)
+        pb (JProgressBar.)
+        arrs {:min #(.setMinimum pb %)
+              :max #(.setMaximum pb %)
+              :value #(.setValue pb %)
+              :text #(.setString pb %)
+              :indeterminate #(if %
+                                (do (.setStringPainted pb false)
+                                    (.setIndeterminate pb %))
+                                (do (.setStringPainted pb true)
+                                    (.setIndeterminate pb %)))}]
+    (.setStringPainted pb true)
+    (init-comp pb arrs nil opts)))
 
 (defn scroll-pane
   ""
