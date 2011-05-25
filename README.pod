@@ -75,14 +75,14 @@ To the left is the java class or "functionality", to the right is the function u
 =head3 Hafni.swing.dialog
 
  JOptionPane/showMessageDialog
-			message
-			info-message
-			warning-message
 			error-message
+			info-message
+			message
 			plain-message
+			warning-message
  JOptionPane/showInputDialog
-			text-input-dialog
 			adv-input-dialog
+			text-input-dialog
 
 =head3 Hafni.swing.layout
 
