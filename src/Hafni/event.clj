@@ -3,7 +3,8 @@
 
 (defprotocol event_p 
   (connect [this arrow] "Connect this event to arrow.")
-  (connectr [this arrow] [this arrow input] "Connect this event to arrow, and execute the arrow."))
+  (connectr [this arrow] [this arrow input] "Connect this event to arrow, and execute the arrow.")
+  (connected? [this] "Returns true if the event is connected."))
 
 (defrecord Event [arrow]
   clojure.lang.IFn
@@ -23,7 +24,8 @@
   (connectr [this arrow input]
             (connect this arrow)
             (this input)
-            arrow))
+            arrow)
+  (connected? [this] (not (nil? @(:arrow this)))))
 
 (defn evt []
   (Event. (atom nil)))
