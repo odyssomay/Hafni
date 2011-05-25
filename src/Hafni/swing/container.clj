@@ -3,12 +3,12 @@
         (Hafni utils event)
         (Hafni.swing component))
   (:import java.awt.event.ActionListener
-           javax.swing.event.ChangeListener
-           (javax.swing JComboBox JSpinner SpinnerListModel)))
+           (javax.swing.event ChangeListener ListSelectionListener)
+           (javax.swing DefaultListModel JComboBox JList JSpinner ListSelectionModel SpinnerListModel)))
 
 (defn change-container-content 
   "Change the content of a container,
-insert_f should be a function of 2 arguments: the index, and the component to add
+insert_f should be a function of 2 arguments: the index, and the object to add
 remove_f should be a function of 1 arguments: the index to remove
 last_items should be an atom that will be used to store the previous items
 new_items should be a coll of the new items."
@@ -56,7 +56,8 @@ Events:
 Fields:
   :content - content of spinner | [Object]
 Events:
-  :changed - fire when the user changes selection | Object"
+  :selected - fire when the user changes selection, 
+              sends the selected object | Object"
   [& options]
   (let [s (JSpinner.)
         ev (evt)
@@ -64,3 +65,44 @@ Events:
                    (stateChanged [_ _] (ev (.getValue s))))
         arrs {:content #(.setModel s (SpinnerListModel. %))}]
     (init-comp s arrs {:selected ev} (parse-options options))))
+
+(defn jlist
+  "Create a JList.
+Fields:
+  :content - the content of the list | [Object]
+  :layout - how the content is displayed.
+            Available options:
+            \"vertical\" (default), \"vertical_wrap\", \"horizontal_wrap\" | String
+  :mode - sets the selection mode, available options:
+          \"single\", \"single_interval\" (default), \"multiple_interval\" | String
+  :mode - not implemented
+  :cellh - set the height of each cell | Int
+  :cellw - set the width of each cell | Int
+Events:
+  :selected - fire when the user changes selection,
+              sends a vector of all the currently selected indices | [Int]"
+  [& options]
+  (let [opts (parse-options options)
+        ev (evt)
+        list_model (DefaultListModel.)
+        l (JList. list_model)
+        listener (reify ListSelectionListener
+                   (valueChanged [_ e]
+                                 (ev (vec (.getSelectedIndices l)))))
+        last_items (atom [])
+        arrs {:content (partial change-container-content #(.add list_model %1 %2) #(.remove list_model %) last_items)
+              :layout #(.setLayoutOrientation l (case %
+                                                  "vertical" JList/VERTICAL
+                                                  "vertical_wrap" JList/VERTICAL_WRAP
+                                                  "horizontal_wrap" JList/HORIZONTAL_WRAP))
+              :mode #(.setSelectionMode l (case %
+                                            "single" ListSelectionModel/SINGLE_SELECTION
+                                            "single_interval" ListSelectionModel/SINGLE_INTERVAL_SELECTION
+                                            "multiple_interval" ListSelectionModel/MULTIPLE_INTERVAL_SELECTION))
+              :cellh #(.setFixedCellHeight l %)
+              :cellw #(.setFixedCellWidth l %)
+              }]
+    (.setVisibleRowCount l -1)
+    (.addListSelectionListener l listener)
+    (init-comp l arrs {:selected ev} opts)))
+
