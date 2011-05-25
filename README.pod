@@ -104,6 +104,11 @@ To the left is the java class or "functionality", to the right is the function u
  JTextField		text-field
  JTextPane		text-pane
 
+=head3 Hafni.swing.utils
+ Font			Font
+			*available-fonts*
+ Color			color
+
 =head3 Hafni.swing.view
 
  JFrame			frame
