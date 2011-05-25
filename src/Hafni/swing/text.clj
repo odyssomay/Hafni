@@ -68,6 +68,22 @@ Events:
     (removeUpdate [_ e]
                   (ev_removed [(.getOffset e) (.getLength e)]))))
 
+(defn- init-text-comp 
+  [text_comp options events extra_arrs]
+  (let [opts (parse-options options)
+        ev_inserted (evt)
+        ev_removed (evt)
+        listener (document-listener ev_inserted ev_removed)
+        arrs {:editable #(.setEditable text_comp %)
+              :tab_size #(.setTabSize text_comp %)
+              :append #(.append text_comp %)
+              :font #(.setFont text_comp %)}]
+    (.addDocumentListener (.getDocument text_comp) listener)
+    (if (contains? opts :text) (.setText text_comp (:text opts)))
+    (init-comp text_comp (merge arrs extra_arrs) 
+               (merge {:inserted ev_inserted :removed ev_removed} events) 
+               opts)))
+
 (defn text-area 
   "Creates a JTextArea
 Fields:
@@ -96,31 +112,23 @@ Events:
   [& options]
   (let [opts (parse-options options)
         ta (JTextArea.)
-        ev_inserted (evt)
-        ev_removed (evt)
         ev_insert (evt)
         ev_remove (evt)
-        listener (document-listener ev_inserted ev_removed) 
         document  (proxy [PlainDocument] []
                     (insertString [offset text a]
-                                  (if-let [ins (ev_insert [offset text])]
-                                    (proxy-super insertString (first ins) (second ins) a)
-                                    (proxy-super insertString offset text a)))
+                                  (if (connected? ev_insert)
+                                      (let [ins (ev_insert [offset text])]
+                                        (proxy-super insertString (first ins) (second ins) a))
+                                      (proxy-super insertString offset text a)))
                     (remove [offset length]
-                            (if-let [remv (ev_remove [offset length])]
-                              (proxy-super remove (first remv) (second remv))
-                              (proxy-super remove offset length))))
-        arrs {:editable #(.setEditable ta %)
-              :tab_size #(.setTabSize ta %)
-              :append #(.append ta %)
-              :font #(.setFont ta %)}]
+                            (if (connected? ev_remove)
+                                (let [remv (ev_remove [offset length])]
+                                  (proxy-super remove (first remv) (second remv)))
+                                (proxy-super remove offset length))))]
     (.setDocument ta document)
-    (.addDocumentListener (.getDocument ta) listener)
-    (if (contains? opts :text) (.setText ta (:text opts)))
-    (init-comp ta arrs {:inserted ev_inserted
-                        :removed ev_removed
-                        :insert ev_insert
-                        :remove ev_remove} opts)))
+    (init-text-comp ta options
+                    {:insert ev_insert
+                     :remove ev_remove} nil)))
 
 (defn- set-attribute [doc style pos]
   "Set attribute with position specified in pos to doc."
@@ -136,32 +144,28 @@ Fields:
   :styles - add styles to be available, :name must be provided, and is
             used as an identifier to :style. Also see:
                Hafni.swing.utils/color 
-               Hafni.swing.utils/font
-                  | [{:name String :font Component :color java.awt.Color :size Int :background java.awt.Color
+            Please note that :font takes the FontFamily as a string - and not
+            a java.awt.Font object.
+                  | [{:name String :font String :color java.awt.Color :size Int :background java.awt.Color
                       :bold Bool :italic Bool :underline Bool}]"
   [& options]
   (let [opts (parse-options options)
-        ev_inserted (evt)
-        ev_removed (evt)
         ev_insert (evt)
         ev_remove (evt)
-        listener (document-listener ev_inserted ev_removed)
         sc (StyleContext.)
         document (proxy [DefaultStyledDocument] [sc]
-         (insertString [offset text a]
-                       (if-let [ins (ev_insert [offset text])]
-                               (proxy-super insertString (first ins) (second ins) a)
-                               (proxy-super insertString offset text a)))
-         (remove [offset length]
-                 (if-let [remv (ev_remove [offset length])]
-                         (proxy-super remove (first remv) (second remv))
-                         (proxy-super remove offset length))))
+                    (insertString [offset text a]
+                                  (if (connected? ev_insert)
+                                      (let [ins (ev_insert [offset text])]
+                                        (proxy-super insertString (first ins) (second ins) a))
+                                      (proxy-super insertString offset text a)))
+                    (remove [offset length]
+                            (if (connected? ev_remove)
+                                (let [remv (ev_remove [offset length])]
+                                  (proxy-super remove (first remv) (second remv)))
+                                (proxy-super remove offset length))))
         tp (JTextPane. document)
-        arrs {:editable #(.setEditable tp %)
-              :tab_size #(.setTabSize tp %)
-              :append #(.append tp %)
-              :font #(.setFont tp %)
-              :style #(set-attribute document (.getStyle document (first %)) (rest %))
+        arrs {:style #(set-attribute document (.getStyle document (first %)) (rest %))
               :styles (fn [coll] 
                         (dorun (map #(let [style (.addStyle sc (:name %) nil)]
                                        (dorun (map (fn [x]
@@ -176,11 +180,8 @@ Fields:
                                                        nil)) 
                                                    %))) 
                                     coll)))}]
-    (if (contains? opts :text) (.setText tp (:text opts)))
-    (.addDocumentListener (.getDocument tp) listener)
-    (init-comp tp arrs {:inserted ev_inserted
-                        :removed ev_removed
-                        :insert ev_insert
-                        :remove ev_remove} opts)))
+    (init-text-comp tp options 
+                    {:insert ev_insert
+                     :remove ev_remove} arrs)))
 
 

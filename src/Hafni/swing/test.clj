@@ -95,11 +95,9 @@
                                                 :removed (arr #(println "removed: \"" % "\""))))
          :dont_exit_on_close :size 300 300))
 
-(import 'java.awt.Color)
-
 (defn text-pane-test []
-  (let [sp (comp-and-events (text-pane :text "YEAH" :styles [{:name "1" :color Color/blue :size 20 :bold true 
-                                                              :italic true :underline true}])
+  (let [sp (comp-and-events (text-pane :text "YEAH" :styles [{:name "1" :size 20 :bold true 
+                                                              :italic true :underline true :font "Monospaced"}])
                                        :insert (arr (fn [[x y]] [x (str y ".")]))
                                        :inserted (arr #(println "inserted: \"" % "\""))
                                        :removed (arr #(println "removed: \"" % "\"")))]
