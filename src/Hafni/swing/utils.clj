@@ -19,4 +19,4 @@ The one argument version takes a symbol, which is any of:
   ([r g b]
    `(java.awt.Color. ~r ~g ~b))
   ([name]
-   (load-string (str "java.awt.Color/" name))))
+   `(load-string (str "java.awt.Color/" name))))
