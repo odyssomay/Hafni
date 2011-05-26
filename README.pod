@@ -108,7 +108,7 @@ To the left is the java class or "functionality", to the right is the function u
 
 =head3 Hafni.swing.utils
  
- Font			Font
+ Font			font
 			*available-fonts*
  Color			color
 
