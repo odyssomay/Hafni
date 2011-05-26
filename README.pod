@@ -72,6 +72,7 @@ To the left is the java class or "functionality", to the right is the function u
  JComboBox 		combo-box
  JList			jlist
  JSpinner		spinner
+ JTabbedPane		tabbed-pane
 
 =head3 Hafni.swing.dialog
 
