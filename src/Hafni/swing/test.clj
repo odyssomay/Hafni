@@ -118,7 +118,7 @@
 
 
 (defn jlist-test []
-  (let [l (comp-and-events (jlist :content (range 100) :layout "horizontal_wrap" :cellh 30 :cellw 30 :mode "multiple_interval")
+  (let [l (comp-and-events (jlist :content (range 100) :layout "horizontal_wrap" :cellh 30 :cellw 30 :selection_mode "multiple_interval")
                            :selected (arr #(println %)))]
     (frame :content (scroll-pane l)
            :size 300 300 :dont_exit_on_close)))

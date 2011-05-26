@@ -26,7 +26,7 @@ new_items should be a coll of the new items."
 (defn combo-box
   "Create a JComboBox
 Fields:
-  :content - set content of the combo box (experimental if you change it) | [Component]
+  :content - set content of the combo box | [Component]
   :add_content - add content to the combo box | Component
   :editable - | Bool
   :selected_index - the currently selected index. 
@@ -73,9 +73,8 @@ Fields:
   :layout - how the content is displayed.
             Available options:
             \"vertical\" (default), \"vertical_wrap\", \"horizontal_wrap\" | String
-  :mode - sets the selection mode, available options:
-          \"single\", \"single_interval\" (default), \"multiple_interval\" | String
-  :mode - not implemented
+  :selection_mode - sets the selection mode, available options:
+                    \"single\", \"single_interval\" (default), \"multiple_interval\" | String
   :cellh - set the height of each cell | Int
   :cellw - set the width of each cell | Int
 Events:
@@ -95,7 +94,7 @@ Events:
                                                   "vertical" JList/VERTICAL
                                                   "vertical_wrap" JList/VERTICAL_WRAP
                                                   "horizontal_wrap" JList/HORIZONTAL_WRAP))
-              :mode #(.setSelectionMode l (case %
+              :selection_mode #(.setSelectionMode l (case %
                                             "single" ListSelectionModel/SINGLE_SELECTION
                                             "single_interval" ListSelectionModel/SINGLE_INTERVAL_SELECTION
                                             "multiple_interval" ListSelectionModel/MULTIPLE_INTERVAL_SELECTION))
