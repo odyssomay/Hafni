@@ -119,6 +119,14 @@
 
 (defn jlist-test []
   (let [l (comp-and-events (jlist :content (range 100) :layout "horizontal_wrap" :cellh 30 :cellw 30 :selection_mode "multiple_interval")
-                           :selected (arr #(println %)))]
+                           :selected (arr (ignore #(println "selected!"))))] ;(flow (fst (output-arr this :content)) >>> (arr (fn [[x y]] (drop-nth (inc (first y)) x))) >>> (input-arr this :content)))]
     (frame :content (scroll-pane l)
+           :size 300 300 :dont_exit_on_close)))
+
+(defn tabbed-pane-test []
+  (let [tp (tabbed-pane :content [{:content (text-area) :title "area1"}
+                                  {:content (text-area) :title "area2"}
+                                  {:content (text-area) :title "area3"}
+                                  {}])]
+    (frame :content tp
            :size 300 300 :dont_exit_on_close)))
