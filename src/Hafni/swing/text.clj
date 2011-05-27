@@ -90,7 +90,7 @@ Fields:
   :editable - set if it is allowed to change the area | Bool
   :tab_size - number of spaces for each tab | Int
   :append - append text to the end of the area | String
-  :font - font of all the text | [Component]
+  :font - font of the text | Font
 Options:
   :text - the text of the area | String
 Events:
