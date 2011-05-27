@@ -116,7 +116,7 @@ Fields:
              | [{:content Component :title String :icon Component :tip String}]
   :tab_placement - available options:
                    \"top\" (default), \"bottom\", \"left\", \"right\" | String 
-  :layout - set the behavior of the tab when they do not fit,
+  :layout - set the behavior of the tabs when they do not fit,
             available options: \"wrap\", \"scroll\" | String"
   [& options]
   (let [opts (parse-options options)
