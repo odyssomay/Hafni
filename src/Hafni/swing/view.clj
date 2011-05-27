@@ -34,16 +34,6 @@ Options:
                  (.setDefaultCloseOperation fr JFrame/EXIT_ON_CLOSE))
          (init-comp fr arrs nil opts)))
 
-(defn panel 
-  "DO NOT USE - use a flow-layout instead" 
-  [content & options]
-  (let [opts (parse-options options)
-        pan (JPanel.)]
-    (if (coll? content)
-      (dorun (map #(.add pan (component %)) content))
-             (.add pan (component content)))
-    pan))
-
 (defn icon
   "Create a java Icon.
 Note that one of :path or :url MUST be given. 
