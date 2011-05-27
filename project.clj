@@ -1,5 +1,5 @@
 (defproject 
-  hafni "1.0.0-SNAPSHOT"
+  hafni "1.0.1-SNAPSHOT"
   :description "Hafni is a java swing wrapper for the clojure language focusing on how components change."
   :url "http://github.com/odyssomay/Hafni"
   :license {:name "zlib License"
