@@ -6,7 +6,7 @@ impossible to change in a convenient way, now is easily changeable and hopefully
 
 =head3 Example
 
-Consider the following example (from Hafni.swing.test/button-test2):
+Consider the following example (from Hafni.test.swing.action/button-test2):
 
  (frame :content (comp-and-events (button :name "*")
                                   :act (flow (output-arr this :name) >>>
