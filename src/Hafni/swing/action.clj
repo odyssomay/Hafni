@@ -12,7 +12,7 @@
 (defn action 
   "Creates a java action.
 Fields:
-  :name - name/title of action. | String
+  :text - name/title of action. | String
   :desc - short description of action. (tooltip) | String
   :mnemonic - See http://download.oracle.com/javase/tutorial/uiswing/components/menu.html#mnemonic | Char
   :accelerator - See above and http://download.oracle.com/javase/6/docs/api/javax/swing/KeyStroke.html#getKeyStroke(java.lang.String) | String
@@ -25,7 +25,7 @@ Events:
         ev (evt)
         jaction (proxy [AbstractAction] []
                        (actionPerformed [e] (ev)))
-        arrs     {:name        #(.putValue jaction Action/NAME %)
+        arrs     {:text        #(.putValue jaction Action/NAME %)
                   :desc        #(.putValue jaction Action/SHORT_DESCRIPTION %)
                   :mnemonic    #(.putValue jaction Action/MNEMONIC_KEY (int %))
                   :accelerator #(.putValue jaction Action/ACCELERATOR_KEY (KeyStroke/getKeyStroke %))
