@@ -62,14 +62,6 @@ Events:
 (defn- event-to-string [e]
   (.getText (.getDocument e) (.getOffset e) (.getLength e)))
 
-(defn- document-listener [ev_inserted ev_removed]
-  (reify DocumentListener
-    (changedUpdate [_ e]) 
-    (insertUpdate [_ e]
-                  (ev_inserted [(.getOffset e) (event-to-string e)]))
-    (removeUpdate [_ e]
-                  (ev_removed [(.getOffset e) (.getLength e)]))))
-
 (defn- init-text-comp 
   [text_comp options events extra_arrs]
   (let [opts (parse-options options)
