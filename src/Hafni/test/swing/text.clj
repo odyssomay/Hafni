@@ -1,6 +1,6 @@
 (ns Hafni.test.swing.text
   (:use (Hafni arrow)
-        (Hafni.swing component layout text view))) 
+        (Hafni.swing component layout text utils view))) 
 
 (defn text-box-test []
   (frame :size 300 300
@@ -9,7 +9,7 @@
          :dont_exit_on_close))
 
 (defn text-area-test []
-  (frame :content (scroll-pane (comp-and-events (text-area :text "YEAH")
+  (frame :content (scroll-pane (comp-and-events (text-area :text "YEAH" :font (font "Monospaced" 30))
                                                 :insert (arr (fn [[x y]] [x (str y ".")]))
                                                 :inserted (arr #(println "inserted: \"" % "\""))
                                                 :removed (arr #(println "removed: \"" % "\""))))
