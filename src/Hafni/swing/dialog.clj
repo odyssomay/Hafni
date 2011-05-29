@@ -1,6 +1,6 @@
 (ns Hafni.swing.dialog
   (:use (Hafni utils)
-        (Hafni.swing component))
+        (Hafni.swing component utils))
   (:import javax.swing.filechooser.FileFilter
            (javax.swing JFileChooser JOptionPane)))
 
@@ -124,7 +124,8 @@ Options:
   :parent - the parent of the dialog | Component"
     [f options]
     (let [opts (parse-options options)]
-      (.setSelectedFile file_chooser nil)
+      (.setSelectedFile file_chooser (file ""))
+      (.setSelectedFiles file_chooser (into-array [(file "")]))
       (when (contains? opts :multiselection) (.setMultiSelectionEnabled file_chooser (:multiselection opts)))
       (when (contains? opts :dir) (.setCurrentDirectory file_chooser (:dir opts)))
       (when (contains? opts :filter) (dorun (map #(.addChoosableFileFilter file_chooser %) (:filter opts))))
