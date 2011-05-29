@@ -1,9 +1,23 @@
 (ns Hafni.swing.utils
   (:use clojure.tools.logging)
-  (:import (java.awt Font GraphicsEnvironment)))
+  (:import java.io.File
+           (java.awt Font GraphicsEnvironment)))
 
 (def *available-fonts*
   (vec (.getAvailableFontFamilyNames (GraphicsEnvironment/getLocalGraphicsEnvironment))))
+
+(def *path-separator* (File/separator))
+
+(defn file 
+  "Create a java.io.File
+If the single argument function is used, 
+the path must use the systems specific separator.
+The multi argument functions inserts the separator
+between the arguments."
+  ([path] (File. path))
+  ([parent child] (File. parent child))
+  ([parent child & childs] 
+   (apply file (File. parent child) (first childs) (rest childs))))
 
 (defn font [name size]
   (if-not (some (partial = name) *available-fonts*)
