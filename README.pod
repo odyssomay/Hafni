@@ -110,6 +110,10 @@ To the left is the java class or "functionality", to the right is the function u
  JTextField		text-field
  JTextPane		text-pane
 
+=head3 Hafni.swing.tree
+ 
+ JTree			tree
+
 =head3 Hafni.swing.utils
  
  File			file
