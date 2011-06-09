@@ -63,6 +63,15 @@ Fields:
               :icon #(.setIcon l (component %))}]
     (init-comp l arrs nil opts)))
 
+(defn mouse-position
+  "returns the position of the 
+mouse as a pair,"
+  []
+  (let [location (.getLocation (java.awt.MouseInfo/getPointerInfo))
+        x (.getX location)
+        y (.getY location)]
+    [x y]))
+
 (defn progress-bar 
   "Create a JProgressBar.
 Fields:
