@@ -49,7 +49,7 @@ See <a href="https://github.com/odyssomay/Hafni/wiki/Usage">Wiki/usage</a>
 
 =head2 Installation
 
-Add [hafni "1.0.1-SNAPSHOT"] as a dependency in leiningen. 
+Add [hafni "1.0.2-SNAPSHOT"] as a dependency in leiningen. 
 
 =head2 Reference
 
@@ -102,6 +102,11 @@ To the left is the java class or "functionality", to the right is the function u
  JMenu			menu
  JMenuBar		menu-bar
  JToolBar		tool-bar
+
+=head3 Hafni.swing.table
+
+ JTable			table
+			table-model
 
 =head3 Hafni.swing.text
 
