@@ -1,36 +1,38 @@
 =head1 Hafni
 
 Hafni is a java swing wrapper for the clojure language focusing on how components change.
-This means in practice that things that normally wouldn't be changed, or is 
-impossible to change in a convenient way, now is easily changeable and hopefully in a more functional way.
+This does not only mean that the content displayed should be easy to change, 
+but also that events coming from that content should be handled in a convenient way.
 
 =head3 Example
 
-Consider the following example (from Hafni.test.swing.action/button-test2):
+This is a small taste of Hafni, for a more thorough explanation of the parts of Hafni, see Usage below.
+The following example comes from C<Hafni.test.swing.action/button-test2>
 
- (frame :content (comp-and-events (button :name "*")
-                                  :act (flow (output-arr this :name) >>>
-                                             (arr #(str % "*")) >>> (input-arr this :name)))
+ (frame :content (comp-and-events (button :text "*")
+                                  :act (flow (output-arr this :text) >>>
+                                             (arr #(str % "*")) >>> (input-arr this :text)))
         :size 200 200 :dont_exit_on_close)
 
 This creates a frame (a window if you so will), with a button as content, size 200x200 and which doesn't close when the frame is closed (useful when working in the repl).
-It is likely that the code
 
- (comp-and-events (button :name "*")
-                  :act (flow (output-arr this :name) >>>
-                             (arr #(str % "*")) >>> (input-arr this :name)))
+ (comp-and-events (button :text "*")
+                  :act (flow (output-arr this :text) >>>
+                             (arr #(str % "*")) >>> (input-arr this :text)))
 
-will look very wierd if you haven't read the wiki. That is OK, we will now in a simple (and incomplete) way walk through this code.
 We first create a button with the text "*".
  
- (button :name "*")
+ (button :text "*")
 
 Then, when the button is pressed, the buttons text is extracted, another "*" is added to the end of that text, and set as the current text of the button. 
  
- (flow (output-arr this :name) >>>
-       (arr #(str % "*")) >>> (input-arr this :name)))
+ (flow (output-arr this :text) >>>
+       (arr #(str % "*")) >>> (input-arr this :text)))
 
-Thus, the text of the button changes in the following way:
+What happens is that C<(output-arr this :name)> receives the current text, 
+which is then sent to the function C<#(str % "*")> (the C<arr> can be ignored for now).
+The result of that function is then sent to the buttons text with C<(input-arr this :text)>.
+The result is that the text of the button changes in the following way:
 
  "*"
  "**"
@@ -53,7 +55,7 @@ Add [hafni "1.0.2-SNAPSHOT"] as a dependency in leiningen.
 
 =head2 Reference
 
-To the left is the java class or "functionality", to the right is the function used.
+To the left is the java class or function that is wrapped, to the right is the corresponding function used in Hafni.
 
 =head3 Hafni.swing.action
 
@@ -100,6 +102,7 @@ To the left is the java class or "functionality", to the right is the function u
 =head3 Hafni.swing.menu
 
  JMenu			menu
+			popup-menu
  JMenuBar		menu-bar
  JToolBar		tool-bar
 
@@ -134,6 +137,7 @@ To the left is the java class or "functionality", to the right is the function u
  JLabel 		label
  JProgressBar		progress-bar
  JScrollPane		scroll-pane
+ MouseInfo		mouse-position
 
 =head2 License (zlib)
 
