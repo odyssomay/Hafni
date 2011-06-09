@@ -8,10 +8,10 @@
 
 (defn change-container-content 
   "Change the content of a container,
-insert_f should be a function of 2 arguments: the index, and the object to add
-remove_f should be a function of 1 arguments: the index to remove
-last_items should be an atom that will be used to store the previous items
-new_items should be a coll of the new items."
+insert_f - a function of 2 arguments: the index, and the object to add
+remove_f - a function of 1 arguments: the index to remove
+last_items - an atom that will be used to store the previous items
+new_items - a coll of the new items."
   [insert_f remove_f last_items new_items]
   (let [d (diff @last_items new_items)
         with_removed (reduce #(drop-nth %2 %1) @last_items (reverse (:- d)))
@@ -30,7 +30,7 @@ Fields:
   :add_content - add content to the combo box | Component
   :editable - | Bool
   :selected_index - the currently selected index. 
-     This field will NOT contain the user's selection. | Int
+     This field will NOT contain the user's selection | Int
 Events:
   :selected - fires when a selection has been made,
               sends the index of the selection and the object that was selected | [Int Object]"
