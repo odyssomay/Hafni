@@ -8,16 +8,20 @@
   (get-comp [this] ))
 
 (defmacro defcomponent 
-  [name fields arr_fn event_fn comp_fn]
-  `(defrecord ~name (conj ~fields values#)
+  "Define a component.
+fields must contain values and jcomponent, where 
+jcomponent holds the wrapped component and values
+should hold"
+  [name fields arr_map event_map]
+  `(defrecord ~name ~fields
      component_p
-     (input-arr [this field] (>>> (arr (fn [x] 
-                                      (swap! ((keyword values#) this) assoc field x)
-                                      x))
-                               (arr (partial ~arr_fn this field))))
-     (output-arr [this field] (arr (ignore #(@((keyword values#) this) field))))
-     (event [this field] (~event_fn this field))
-     (get-comp [this] (~comp_fn this))))
+     (~'input-arr [~'this field#] (>>> (arr (fn [x#] 
+                                                (swap! (:values ~'this) assoc field# x#)
+                                                x#))
+                                       (arr (get ~arr_map field#))))
+     (~'output-arr [this# field#] (arr (ignore #(@(:values this#) field#))))
+     (~'event [~'this field#] (get ~event_map field#))
+     (~'get-comp [this#] (:jcomponent this#))))
 
 (defrecord Component [jcomponent arrs values events]
   component_p
@@ -29,7 +33,18 @@
   (event [this field] 
          (if (:events this)
              ((:events this) field)))
-  (get-comp [this] (:jcomponent this)))
+  (get-comp [this] (:jcomponent this))
+  Object
+  (toString [this]
+            (str "#<Wrapping " 
+                 (class (:jcomponent this))
+                 " with values: "
+                 @(:values this)
+                 ">")))
+
+(defmethod clojure.core/print-method Component 
+  [this writer]
+  (.write writer (str this)))
 
 (defn init-comp-opts [component options]
   (init-options options (reduce #(assoc %1 %2 (input-arr component %2)) {} (keys (:arrs component)))))
