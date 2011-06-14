@@ -98,6 +98,7 @@ To the left is the java class or function that is wrapped, to the right is the c
  BoxLayout		box-layout
  CardLayout		card-layout
  FlowLayout		flow-layout
+ GridLayout		grid-layout
 
 =head3 Hafni.swing.menu
 
