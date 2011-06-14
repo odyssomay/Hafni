@@ -2,7 +2,7 @@
   (:use (Hafni utils arrow event)
         (Hafni.swing component))
   (:import (javax.swing BoxLayout JPanel)
-           (java.awt BorderLayout CardLayout FlowLayout)))
+           (java.awt BorderLayout CardLayout FlowLayout GridLayout)))
 
 (defn border-layout 
   "Create a BorderLayout
@@ -84,4 +84,20 @@ Fields:
                                "left" FlowLayout/LEFT
                                "right" FlowLayout/RIGHT
                                (throw (Exception. ""))))}]
+    (init-comp cont arrs nil opts)))
+
+(defn grid-layout
+  "Create a GridLayout
+Fields:
+  :content - content of layout | [Component]
+  :hgap - Horizontal gap between components | Int
+  :vgap - Vertical gap between components | Int"
+  [rows cols & options]
+  (let [opts (parse-options options)
+        layout (GridLayout. rows cols)
+        cont (JPanel. layout)
+        arrs {:content (fn [coll]
+                         (dorun (map #(.add cont (component %)) coll)))
+              :hgap #(.setHgap layout %)
+              :vgap #(.setVgap layout %)}]
     (init-comp cont arrs nil opts)))
