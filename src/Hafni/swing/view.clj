@@ -19,7 +19,9 @@ Fields:
 
 Options:
   :dont_show - Do not show the frame upon creation.
-  :dont_exit_on_close - Do not exit the application when the frame closes."
+  :dont_exit_on_close - Do not exit the application when the frame closes.
+  :pack - makes the frame of such size that the content fits.
+          Overrides :size"
     [& options]
     (let [opts (parse-options options)
           fr (JFrame.)
@@ -32,7 +34,9 @@ Options:
          (if-not (contains? opts :dont_show) (.setVisible fr true))
          (if-not (contains? opts :dont_exit_on_close) 
                  (.setDefaultCloseOperation fr JFrame/EXIT_ON_CLOSE))
-         (init-comp fr arrs nil opts)))
+         (let [c (init-comp fr arrs nil opts)]
+           (if (contains? opts :pack) (.pack (component c)))
+           c)))
 
 (defn icon
   "Create a java Icon.
