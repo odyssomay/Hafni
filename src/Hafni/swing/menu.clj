@@ -26,11 +26,14 @@ Fields:
 (defn menu-bar
   "Create a JMenuBar
 Fields:
-  :content - content of menu bar | [Component]"
+  :content - content of menu bar (not changeable) | [Component]"
   [& options]
   (let [m (JMenuBar.)
         last_items (atom [])
-        arrs {:content (partial change-menu-content m last_items)}]
+        arrs {:content 
+              (fn [coll] 
+                (dorun
+                  (map #(.add m (component %)) coll)))}]
     (init-comp m arrs {} (parse-options options))))
 
 (defn popup-menu 
@@ -48,13 +51,18 @@ close when an item is choosed."
 (defn tool-bar
   "Create a JToolBar
 Fields:
-  :content - content of toolbar | [Component]
+  :content - content of toolbar (not changeable) | [Component]
   :floatable - if the toolbar is detachable | Bool
   :rollover - if true, shows a visual indicator under the cursor | Bool"
   [& options]
   (let [t (JToolBar.)
         last_items (atom [])
-        arrs {:content (partial change-menu-content t last_items)
+        arrs {:content
+              (fn [coll] 
+                (dorun
+                  (map #(if (= % [])
+                          (.addSeparator t)
+                          (.add t (component %))) coll)))
               :floatable #(.setFloatable t %)
               :rollover #(.setRollover t %)}]
     (init-comp t arrs {} (parse-options options))))
