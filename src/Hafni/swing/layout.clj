@@ -1,6 +1,6 @@
 (ns Hafni.swing.layout
   (:use (Hafni utils arrow event)
-        (Hafni.swing component))
+        (Hafni.swing component view))
   (:import (javax.swing BoxLayout JPanel)
            (java.awt BorderLayout CardLayout FlowLayout GridLayout)))
 
@@ -13,15 +13,18 @@ Fields:
   [& options] 
   (let [opts (parse-options options)
         layout (BorderLayout.)
-        cont (JPanel. layout)
-        arrs {:north #(.add cont BorderLayout/NORTH (component %))
-              :south #(.add cont BorderLayout/SOUTH (component %))
-              :west #(.add cont BorderLayout/WEST (component %))
-              :east #(.add cont BorderLayout/EAST (component %))
-              :center #(.add cont BorderLayout/CENTER (component %))
+        p (panel :layout layout)
+        items (atom {})
+        arrs {:north  #(swap! items assoc BorderLayout/NORTH (component %))  ;#(.add cont BorderLayout/NORTH (component %))
+              :south  #(swap! items assoc BorderLayout/SOUTH (component %))  ;#(.add cont BorderLayout/SOUTH (component %))
+              :west   #(swap! items assoc BorderLayout/WEST (component %))   ;#(.add cont BorderLayout/WEST (component %))
+              :east   #(swap! items assoc BorderLayout/EAST (component %))   ;#(.add cont BorderLayout/EAST (component %))
+              :center #(swap! items assoc BorderLayout/CENTER (component %)) ;#(.add cont BorderLayout/CENTER (component %))
               :hgap #(.setHgap layout %)
               :vgap #(.setVgap layout %)}]
-    (init-comp cont arrs nil opts)))
+    (add-watch items nil (fn [_ _ _ new_items]
+                           ((input-arr p :content) new_items)))
+    (init-comp (component p) arrs nil opts)))
 
 (defn box-layout
   "Create a BoxLayout
@@ -31,13 +34,13 @@ Options:
   :valign - align components vertically, instead of the default horizontal alignment"
   [& options]
   (let [opts (parse-options options)
-        cont (JPanel.)
-        layout (BoxLayout. cont (if (contains? opts :valign)
-                                  BoxLayout/Y_AXIS
-                                  BoxLayout/X_AXIS))
-        arrs {:content (fn [x] (dorun (map #(.add cont (component %)) x)))}]
-    (.setLayout cont layout)
-    (init-comp cont arrs nil opts)))
+        p (panel)
+        layout (BoxLayout. (component p) (if (contains? opts :valign)
+                                           BoxLayout/Y_AXIS
+                                           BoxLayout/X_AXIS))
+        arrs {:content (input-arr p :content)}]
+    (.setLayout (component p) layout)
+    (init-comp (component p) arrs nil opts)))
 
 (defn card-layout
   "Create a CardLayout.
@@ -47,19 +50,21 @@ Fields:
   :hgap - Horizontal gap between components | Int
   :vgap - Vertical gap between components | Int
   
-The input-arr of content only adds new components.
+The input-arr of content only adds new components that can be shown,
+but doesn't show them.
 The string that accompany each component is an identifier,
 when that component should be shown, that same identifier
 is sent as argument to the input-arr :show"
   [& options]
   (let [opts (parse-options options)
         layout (CardLayout.)
-        cont (JPanel. layout)
-        arrs {:content (fn [x] (dorun (map #(.add cont (component (second %)) (first %)) x)))
-              :show #(.show layout cont %)
+;        cont (JPanel. layout)
+        p (panel :layout layout)
+        arrs {:content (>>> (arr #(map reverse %)) (input-arr p :content))
+              :show #(.show layout (component p) %)
               :hgap #(.setHgap layout %)
               :vgap #(.setVgap layout %)}]
-    (init-comp cont arrs nil opts)))
+    (init-comp (component p) arrs nil opts)))
 
 (defn flow-layout
   "Create a FlowLayout
@@ -72,8 +77,8 @@ Fields:
   [& options]
   (let [opts (parse-options options)
         layout (FlowLayout.)
-        cont (JPanel. layout)
-        arrs {:content (fn [x] (dorun (map #(.add cont (component %)) x)))
+        p (panel :layout layout)
+        arrs {:content (input-arr p :content)
               :hgap #(.setHgap layout %)
               :vgap #(.setVgap layout %)
               :align #(.setAlignment layout
@@ -84,7 +89,7 @@ Fields:
                                "left" FlowLayout/LEFT
                                "right" FlowLayout/RIGHT
                                (throw (Exception. ""))))}]
-    (init-comp cont arrs nil opts)))
+    (init-comp (component p) arrs nil opts)))
 
 (defn grid-layout
   "Create a GridLayout
@@ -95,9 +100,8 @@ Fields:
   [rows cols & options]
   (let [opts (parse-options options)
         layout (GridLayout. rows cols)
-        cont (JPanel. layout)
-        arrs {:content (fn [coll]
-                         (dorun (map #(.add cont (component %)) coll)))
+        p (panel :layout layout)
+        arrs {:content (input-arr p :content)
               :hgap #(.setHgap layout %)
               :vgap #(.setVgap layout %)}]
-    (init-comp cont arrs nil opts)))
+    (init-comp (component p) arrs nil opts)))
