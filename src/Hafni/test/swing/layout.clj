@@ -10,7 +10,7 @@
                         :west (button :text "Hello WEST") :east (button :text "Hello EAST")
                         :center b)]
     (connectr (event b :act) (>>> (arr (ignore #(button :text (str "Hello " (swap! i inc)))))
-                                 (input-arr layout :north)))
+                                  (input-arr layout :north)))
     (frame :content layout
            :title "Layout test"
            :size 500 300
