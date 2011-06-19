@@ -2,7 +2,7 @@
   (:use clj-diff.core
         clojure.tools.logging
         (Hafni event utils arrow)
-        (Hafni.swing component))
+        (Hafni.swing component container))
   (:import (java.awt.event ActionListener)
            (javax.swing ImageIcon JComboBox JFrame JLabel JPanel JProgressBar JScrollPane)
            (java.net URL))) 
@@ -75,6 +75,39 @@ mouse as a pair,"
         x (.getX location)
         y (.getY location)]
     [x y]))
+
+(defn panel
+  "Create a JPanel
+Fields:
+  :content - the content of the panel (changeable).
+             Each object can either be a Component, or 
+             a pair with a Component and a constraint. | Object
+Options:
+  :layout - the layout to use | Component"
+  [& options]
+  (let [opts (parse-options options)
+        p (JPanel.)
+        last_items (atom [])
+        arrs {:content (fn [coll]
+                         (.removeAll p) ; aah
+                         (dorun 
+                           (map #(if (or (vector? %)
+                                         (list? %)
+                                         (seq? %))
+                                   (.add p (component (first %)) (second %))
+                                   (.add p (component %))) coll))
+                         (.updateUI p)) 
+                       ;(partial change-container-content 
+                       ;         (fn [index object]
+                       ;           (if (or (vector? object)
+                       ;                   (list? object)
+                       ;                   (seq? object))
+                       ;             (.add p (component (first object)) (second object) (int index))
+                       ;             (.add p (component object) (int index))))
+                       ;         #(.remove p %) last_items)}]
+             }]
+    (if (contains? opts :layout) (.setLayout p (:layout opts)))
+    (init-comp p arrs nil opts)))
 
 (defn progress-bar 
   "Create a JProgressBar.
