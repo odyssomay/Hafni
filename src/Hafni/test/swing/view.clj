@@ -4,7 +4,8 @@
 
 (defn label-test []
   (frame :content (label :icon (icon :url "http://clojure.org/space/showimage/clojure-icon.gif"))
-         :size 300 300 :dont_exit_on_close))
+         ;:size 300 300 
+         :dont_exit_on_close :pack))
 
 (defn label-test2 []
   (let [i (atom 0)
@@ -25,3 +26,15 @@
                             :act (flow (output-arr pb :indeterminate) >>> (arr not) >>> (input-arr pb :indeterminate)))]
     (frame :content (flow-layout :content pb b b2 b3 :align "center")
            :size 300 300 :dont_exit_on_close)))
+
+(defn panel-test []
+  (let [p (panel :content (map #(label :text (str %)) (range 10)))
+        l (border-layout :center p 
+                         :south (comp-and-events (button :text "flip")
+                                                 :act (flow
+                                                        (output-arr p :content) >>>
+                                                        (arr #(cons (last %) (butlast %))) >>>
+                                                        (input-arr p :content))))]
+    (frame :content l
+           :dont_exit_on_close
+           :pack)))
