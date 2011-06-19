@@ -59,5 +59,7 @@
   (||| [this arr1] (||| this arr1 (iarr this (fn [_] nil)))))
 
 (defn arr [f]
-  (Arrow. f))
+  (if (isa? (class f) (class (Arrow. identity)))
+    f
+    (Arrow. f)))
 
