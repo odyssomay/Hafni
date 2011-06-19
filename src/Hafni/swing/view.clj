@@ -82,7 +82,6 @@ Fields:
   :content - the content of the panel (changeable).
              Each object can either be a Component, or 
              a pair with a Component and a constraint. | Object
-Options:
   :layout - the layout to use | Component"
   [& options]
   (let [opts (parse-options options)
@@ -105,8 +104,7 @@ Options:
                        ;             (.add p (component (first object)) (second object) (int index))
                        ;             (.add p (component object) (int index))))
                        ;         #(.remove p %) last_items)}]
-             }]
-    (if (contains? opts :layout) (.setLayout p (:layout opts)))
+             :layout #(.setLayout p %)}]
     (init-comp p arrs nil opts)))
 
 (defn progress-bar 
