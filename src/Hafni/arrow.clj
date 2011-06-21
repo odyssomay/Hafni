@@ -24,7 +24,7 @@
 
 (defrecord Arrow [f]
   clojure.lang.IFn
-  (invoke [this input] ((:f this) input))
+  (invoke [this input] (f input))
   Arrow_p
   (>>> [this dest] 
        (if (isa? (class this) (class dest))
