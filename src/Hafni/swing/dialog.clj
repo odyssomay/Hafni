@@ -12,7 +12,7 @@ Options:
   :title - the title of the dialog | String" 
   [message_type & options]
   (let [opts (parse-options options)]
-    (JOptionPane/showMessageDialog (component (:parent opts)) (:message opts) (:title opts) message_type)))
+    (JOptionPane/showMessageDialog (component (:parent opts)) (component (:message opts)) (:title opts) message_type)))
 
 (defn message 
   "Show a simple message dialog."
