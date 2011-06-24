@@ -14,52 +14,57 @@
   `(-> ~(first flows) ~@(partition 2 (rest flows))))
 
 (defprotocol Arrow_p 
-  (>>> [this dest] "")
-  (<<< [this src] "")
-  (fst [this])
-  (snd [this])
-  (*** [this a])
-  (&&& [this a])
-  (||| [this arr1 arr2] [this arr1]))
+  (>>>_int [this dest] "")
+  (fst_int [this]))
 
 (defrecord Arrow [f]
   clojure.lang.IFn
   (invoke [this input] (f input))
   Arrow_p
-  (>>> [this dest] 
+  (>>>_int [this dest] 
        (if (isa? (class this) (class dest))
            (assoc this :f #((:f dest) ((:f this) %)))
            (error ">>> was called, but dest isn't an arrow.")))
 
-  (<<< [this src]
-       (if (isa? (class this) (class src))
-           (>>> src this)
-           (error "<<< was called, but src isn't an arrow.")))
-
-  (fst [this] (assoc this :f (fn [[x y]] [(this x) y])))
-  (snd [this] (assoc this :f (fn [[x y]] [x (this y)])))
-
-  (*** [this a]
-       (if (isa? (class this) (class a))
-           (>>> (fst this) (snd a))
-           (error "*** was called, but a isn't an arrow")))
-
-  (&&& [this a] 
-       (if (isa? (class this) (class a))
-           (assoc this :f (fn [x] ((*** this a) [x x])))
-           (error "&&& was called, but a isn't an arrow.")))
-
-  (||| [this arr1 arr2]
-       (if (isa? (class this) (class arr1))
-         (if (isa? (class this) (class arr2))
-           (>>> (fst this) (iarr this #(if (first %) (arr1 %) (arr2 %))))
-           (error "||| was called, but arr2 isn't an arrow."))
-         (error "||| was called, but arr1 isn't an arrow.")))
-
-  (||| [this arr1] (||| this arr1 (iarr this (fn [_] nil)))))
+  (fst_int [this] (assoc this :f (fn [[x y]] [(this x) y]))))
 
 (defn arr [f]
   (if (isa? (class f) (class (Arrow. identity)))
     f
     (Arrow. f)))
+
+(extend-type clojure.lang.IFn
+  Arrow_p
+  (>>>_int [this dest]
+       (comp dest this))
+  (fst_int [this]
+           (fn [[x y]]
+             [(this x) y])))
+
+(defn >>> [& arrs]
+  (case (count arrs)
+    1 (first arrs)
+    2 (>>>_int (first arrs) (second arrs))
+    (>>>_int (first arrs) (apply >>> (rest arrs)))))
+
+(defn <<< [& arrs]
+  (apply >>> (reverse arrs)))
+
+(defn fst [arr]
+  (fst_int arr))
+
+(defn snd [arr]
+  (>>> swap (fst arr) swap))
+
+(defn *** [arr1 arr2]
+  (>>> (fst arr1) (snd arr2)))
+
+(defn &&& [arr1 arr2]
+  (>>> clone (*** arr1 arr2)))
+
+(defn ||| 
+  ([arr1 arr2]
+   (||| arr1 arr2 (constantly nil)))
+  ([arr1 arr2 arr3]
+   (>>> (fst arr1) #(if (first %) (arr2 %) (arr3 %)))))
 
