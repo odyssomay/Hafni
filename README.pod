@@ -51,7 +51,7 @@ See <a href="https://github.com/odyssomay/Hafni/wiki/Usage">Wiki/usage</a>
 
 =head2 Installation
 
-Add [hafni "1.0.5-SNAPSHOT"] as a dependency in leiningen. 
+Add [hafni "1.0.6-SNAPSHOT"] as a dependency in leiningen. 
 
 =head2 Reference
 
