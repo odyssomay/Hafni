@@ -96,7 +96,7 @@ Example:
   and clones it.
 
 Example:
-  ((*** inc dec) 1)
+  ((&&& inc dec) 1)
 => [2 0]"
   [arr1 arr2]
   (>>> clone (*** arr1 arr2)))
