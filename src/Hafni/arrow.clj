@@ -63,6 +63,7 @@ Example:
 (defn fst 
   "Create an arrow that takes a pair
   and applies arr on the first value.
+
 Example:
   ((fst inc) [1 1])
 => [2 1]"
@@ -72,6 +73,7 @@ Example:
 (defn snd 
   "As fst, but applies arr on the 
   second value.
+
 Example:
   ((fst inc) [1 1])
 => [1 2]"
@@ -82,6 +84,7 @@ Example:
   "Create an arrow that takes a pair,
   applies arr1 on the first value
   and applies arr2 on the second value.
+
 Example:
   ((*** inc dec) [1 1])
 => [2 0]"
@@ -91,6 +94,7 @@ Example:
 (defn &&& 
   "As *** but takes a single value
   and clones it.
+
 Example:
   ((*** inc dec) 1)
 => [2 0]"
