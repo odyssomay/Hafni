@@ -63,7 +63,7 @@
   "Create a JTree
 Fields:
   :content - a map with nodes represented as 
-             {:root String :child [{:root String :child [...]}]} - Map
+             {:root String :child [{:root String :child [...]}]} | Map
 Events:
   :selected - when the user changes the selection,
               this event sends the current selection | [[String]]
