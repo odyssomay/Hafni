@@ -1,7 +1,8 @@
 (ns Hafni.swing.view
   (:use clj-diff.core
+        clj-arrow.arrow
         clojure.tools.logging
-        (Hafni event utils arrow)
+        (Hafni event utils)
         (Hafni.swing component container))
   (:import (java.awt.event ActionListener)
            (javax.swing ImageIcon JComboBox JFrame JLabel JPanel JProgressBar JScrollPane)

@@ -1,5 +1,6 @@
 (ns Hafni.swing.action
-  (:use (Hafni utils arrow event)
+  (:use clj-arrow.arrow
+        (Hafni utils event)
         (Hafni.swing component))
   (:import (javax.swing Action AbstractAction 
                         ButtonGroup

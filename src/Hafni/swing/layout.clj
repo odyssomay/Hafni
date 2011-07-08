@@ -1,5 +1,6 @@
 (ns Hafni.swing.layout
-  (:use (Hafni utils arrow event)
+  (:use clj-arrow.arrow
+        (Hafni utils event)
         (Hafni.swing component view))
   (:import (javax.swing BoxLayout JPanel)
            (java.awt BorderLayout CardLayout FlowLayout GridLayout)))
