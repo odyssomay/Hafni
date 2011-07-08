@@ -1,5 +1,5 @@
 (ns Hafni.test.swing.text
-  (:use (Hafni arrow)
+  (:use clj-arrow.arrow
         (Hafni.swing component layout text utils view))) 
 
 (defn text-box-test []

@@ -1,5 +1,6 @@
 (ns Hafni.test.swing.view
-  (:use (Hafni arrow utils)
+  (:use clj-arrow.arrow
+        (Hafni utils)
         (Hafni.swing action component layout view)))
 
 (defn label-test []

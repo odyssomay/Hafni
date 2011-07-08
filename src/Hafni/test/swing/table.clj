@@ -1,5 +1,5 @@
 (ns Hafni.test.swing.table
-  (:use (Hafni arrow)
+  (:use clj-arrow.arrow
         (Hafni.swing action component layout table view)))
 
 (defn table-test []

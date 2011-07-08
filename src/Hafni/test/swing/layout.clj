@@ -1,5 +1,6 @@
 (ns Hafni.test.swing.layout
-  (:use (Hafni arrow event utils)
+  (:use clj-arrow.arrow
+        (Hafni event utils)
         (Hafni.swing action component layout view)))
 
 (defn border-layout-test []

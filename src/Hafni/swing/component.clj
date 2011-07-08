@@ -1,5 +1,7 @@
 (ns Hafni.swing.component
-  (:use (Hafni arrow event utils)))
+  (:use 
+    clj-arrow.arrow
+    (Hafni event utils)))
 
 (defprotocol component_p
   (input-arr [this field] "Get the input arrow of field.")

@@ -1,5 +1,6 @@
 (ns Hafni.test.swing.menu
-  (:use (Hafni arrow utils) 
+  (:use clj-arrow.arrow
+        (Hafni utils) 
         (Hafni.swing action component layout menu view)))
 
 (defn menu-bar-test []

@@ -1,5 +1,6 @@
 (ns Hafni.test.swing.tree
-  (:use (Hafni arrow utils) 
+  (:use clj-arrow.arrow
+        (Hafni utils) 
         (Hafni.swing action component layout tree view))
   (:import (Hafni.swing.tree tree-model node)))
 

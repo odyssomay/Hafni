@@ -1,6 +1,6 @@
 (ns Hafni.test.swing.action
-   (:use clojure.test
-         (Hafni arrow event)
+   (:use clj-arrow.arrow
+         (Hafni event)
          (Hafni.swing action component layout view)))
 
 (defn button-test []

@@ -1,5 +1,6 @@
 (ns Hafni.test.swing.container
-  (:use (Hafni arrow utils)
+  (:use clj-arrow.arrow
+        (Hafni utils)
         (Hafni.swing text layout component container view action)))
 
 (defn combo-box-test []
