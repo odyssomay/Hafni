@@ -120,7 +120,7 @@ Options:
                     multiple files | Bool
   :dir - the initial directory of the chooser
          (see Hafni.swing.utils/file) | File
-  :filter - see file-filter | FileFilter
+  :filter - see file-filter | [FileFilter]
   :parent - the parent of the dialog | Component"
     [f options]
     (let [opts (parse-options options)]
